@@ -4012,11 +4012,6 @@ prometheus:
             target_label: __metrics_path__
             regex: (.+)
             replacement: ${1}
-          - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_path]
-            action: replace
-            regex: (.+)
-            replacement: ${1}
-            target_label: __metrics_path__
  
     ## If scrape config contains a repetitive section, you may want to use a template.
     ## In the following example, you can see how to define `gce_sd_configs` for multiple zones
