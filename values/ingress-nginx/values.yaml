@@ -641,7 +641,7 @@ prometheus:
     labels: {}
 
     ## A set of labels to allow the selection of endpoints for the ServiceMonitor.
-    selectorMatchLabels: []
+    selectorMatchLabels: {}
 
     ## A list of endpoints allowed as part of this ServiceMonitor.
     ## Matches on the name of a Service port.
