@@ -5,17 +5,15 @@ controller:
     enabled: true
     service:
       annotations:
-        prometheus.io/scrape: "true"
-        prometheus.io/port: "10254"
+        prometheus.io/scrape: true
+        prometheus.io/port: 9113
     serviceMonitor:
       enabled: true
       additionalLabels:
         release: kube-prometheus-stack-app
   podAnnotations:
-    prometheus.io/scrape: "true"
-    prometheus.io/port: "10254"
-
-
+    prometheus.io/scrape: true
+    prometheus.io/port: 9113
 
   ## The kind of the Ingress Controller installation - deployment or daemonset.
   kind: deployment
