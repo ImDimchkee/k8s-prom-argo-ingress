@@ -3,13 +3,13 @@ controller:
   name: controller
   metrics:
     enabled: true
-    service:
-      create: true
-      annotations:
-        prometheus.io/scrape: "true"
-        prometheus.io/port: "9113"
-        prometheus.io/path: "/metrics"
     port: 9113
+    annotations:
+      prometheus.io/scrape: "true"
+      prometheus.io/port: "9113"
+      prometheus.io/path: "/metrics"
+    service:
+      create: false
   ## The kind of the Ingress Controller installation - deployment or daemonset.
   kind: deployment
 
@@ -635,14 +635,13 @@ prometheus:
 
   serviceMonitor:
     ## Creates a serviceMonitor to expose statistics on the kubernetes pods.
-    create: true
+    create: false
 
     ## Kubernetes object labels to attach to the serviceMonitor object.
     labels: {}
 
     ## A set of labels to allow the selection of endpoints for the ServiceMonitor.
-    selectorMatchLabels:
-      service: "nginx-ingress-prometheus-service"
+    selectorMatchLabels: []
 
     ## A list of endpoints allowed as part of this ServiceMonitor.
     ## Matches on the name of a Service port.
