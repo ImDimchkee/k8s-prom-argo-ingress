@@ -188,7 +188,7 @@ alertmanager:
       smtp_smarthost: "smtp.gmail.com:587"
       smtp_from: "dimochka96@gmail.com"
       smtp_auth_username: "dimochka96@gmail.com"
-      smtp_auth_password: "lynmcipnnjnvktwe"
+      smtp_auth_password: "anomgkxoajgoxtpz"
       smtp_require_tls: true
       resolve_timeout: 5m
     inhibit_rules:
