@@ -2,7 +2,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: kube-prom-stack
+  name: kube-prom-stack-app
   namespace: argocd
 spec:
   project: default
