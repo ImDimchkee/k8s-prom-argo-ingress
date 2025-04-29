@@ -12,8 +12,8 @@ spec:
     helm:
       valueFiles:
         - ../../values/ingress-nginx/values.yaml
-    files:
-      - apps/ingress-nginx-servicemonitor.yaml
+    # files:
+    #   - apps/ingress-nginx-servicemonitor.yaml
   destination:
     server: https://kubernetes.default.svc
     namespace: ingress-nginx

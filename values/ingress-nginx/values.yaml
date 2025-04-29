@@ -642,7 +642,7 @@ prometheus:
 
   serviceMonitor:
     ## Creates a serviceMonitor to expose statistics on the kubernetes pods.
-    create: false
+    create: true
 
     ## Kubernetes object labels to attach to the serviceMonitor object.
     labels: {}
