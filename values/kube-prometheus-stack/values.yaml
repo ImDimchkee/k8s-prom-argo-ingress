@@ -1,328 +1,6 @@
-# Default values for kube-prometheus-stack.
-# This is a YAML-formatted file.
-# Declare variables to be passed into your templates.
-
-## Provide a name in place of kube-prometheus-stack for `app:` labels
-##
-nameOverride: ""
-
 ## Override the deployment namespace
 ##
-namespaceOverride: ""
-
-## Provide a k8s version to auto dashboard import script example: kubeTargetVersionOverride: 1.26.6
-##
-kubeTargetVersionOverride: ""
-
-## Allow kubeVersion to be overridden while creating the ingress
-##
-kubeVersionOverride: ""
-
-## Provide a name to substitute for the full names of resources
-##
-fullnameOverride: ""
-
-## Labels to apply to all resources
-##
-commonLabels: {}
-# scmhash: abc123
-# myLabel: aakkmd
-
-## Install Prometheus Operator CRDs
-##
-crds:
-  enabled: true
-  ## The CRD upgrade job mitigates the limitation of helm not being able to upgrade CRDs.
-  ## The job will apply the CRDs to the cluster before the operator is deployed, using helm hooks.
-  ## It deploy a corresponding clusterrole, clusterrolebinding and serviceaccount to apply the CRDs.
-  ## This feature is in preview, off by default and may change in the future.
-  upgradeJob:
-    enabled: false
-    forceConflicts: false
-    image:
-      busybox:
-        registry: docker.io
-        repository: busybox
-        tag: "latest"
-        sha: ""
-        pullPolicy: IfNotPresent
-      kubectl:
-        registry: registry.k8s.io
-        repository: kubectl
-        tag: ""  # defaults to the Kubernetes version
-        sha: ""
-        pullPolicy: IfNotPresent
-
-    env: {}
-    ## Define resources requests and limits for single Pods.
-    ## ref: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
-    ##
-    resources: {}
-
-    ## Additional volumes
-    ##
-    extraVolumes: []
-
-    ## Additional volume mounts
-    ##
-    extraVolumeMounts: []
-
-    ## Define which Nodes the Pods are scheduled on.
-    ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#nodeselector
-    ##
-    nodeSelector: {}
-
-    ## Assign custom affinity rules to the upgrade-crd job
-    ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
-    ##
-    affinity: {}
-    # nodeAffinity:
-    #   requiredDuringSchedulingIgnoredDuringExecution:
-    #     nodeSelectorTerms:
-    #     - matchExpressions:
-    #       - key: kubernetes.io/e2e-az-name
-    #         operator: In
-    #         values:
-    #         - e2e-az1
-    #         - e2e-az2
-
-    ## If specified, the pod's tolerations.
-    ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/
-    ##
-    tolerations: []
-    # - key: "key"
-    #   operator: "Equal"
-    #   value: "value"
-    #   effect: "NoSchedule"
-
-    ## If specified, the pod's topology spread constraints.
-    ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/
-    ##
-    topologySpreadConstraints: []
-    # - maxSkew: 1
-    #   topologyKey: topology.kubernetes.io/zone
-    #   whenUnsatisfiable: DoNotSchedule
-    #   labelSelector:
-    #     matchLabels:
-    #       app: alertmanager
-
-    # ## Labels to add to the upgrade-crd job
-    # ##
-    labels: {}
-
-    ## Annotations to add to the upgrade-crd job
-    ##
-    annotations: {}
-
-    ## Labels to add to the upgrade-crd pod
-    ##
-    podLabels: {}
-
-    ## Annotations to add to the upgrade-crd pod
-    ##
-    podAnnotations: {}
-
-    ## Service account for upgrade crd job to use.
-    ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/
-    ##
-    serviceAccount:
-      create: true
-      name: ""
-      annotations: {}
-      labels: {}
-      automountServiceAccountToken: true
-
-    ## Container-specific security context configuration
-    ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
-    ##
-    containerSecurityContext:
-      allowPrivilegeEscalation: false
-      readOnlyRootFilesystem: true
-      capabilities:
-        drop:
-          - ALL
-
-    ## SecurityContext holds pod-level security attributes and common container settings.
-    ## This defaults to non root user with uid 1000 and gid 2000. *v1.PodSecurityContext  false
-    ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
-    ##
-    podSecurityContext:
-      fsGroup: 65534
-      runAsGroup: 65534
-      runAsNonRoot: true
-      runAsUser: 65534
-      seccompProfile:
-        type: RuntimeDefault
-
-## custom Rules to override "for" and "severity" in defaultRules
-##
-customRules: {}
-  # AlertmanagerFailedReload:
-  #   for: 3m
-  # AlertmanagerMembersInconsistent:
-  #   for: 5m
-  #   severity: "warning"
-
-## Create default rules for monitoring the cluster
-##
-defaultRules:
-  create: true
-  rules:
-    alertmanager: true
-    etcd: true
-    configReloaders: true
-    general: true
-    k8sContainerCpuUsageSecondsTotal: true
-    k8sContainerMemoryCache: true
-    k8sContainerMemoryRss: true
-    k8sContainerMemorySwap: true
-    k8sContainerResource: true
-    k8sContainerMemoryWorkingSetBytes: true
-    k8sPodOwner: true
-    kubeApiserverAvailability: true
-    kubeApiserverBurnrate: true
-    kubeApiserverHistogram: true
-    kubeApiserverSlos: true
-    kubeControllerManager: true
-    kubelet: true
-    kubeProxy: true
-    kubePrometheusGeneral: true
-    kubePrometheusNodeRecording: true
-    kubernetesApps: true
-    kubernetesResources: true
-    kubernetesStorage: true
-    kubernetesSystem: true
-    kubeSchedulerAlerting: true
-    kubeSchedulerRecording: true
-    kubeStateMetrics: true
-    network: true
-    node: true
-    nodeExporterAlerting: true
-    nodeExporterRecording: true
-    prometheus: true
-    prometheusOperator: true
-    windows: true
-
-  ## Reduce app namespace alert scope
-  appNamespacesTarget: ".*"
-
-  ## Set keep_firing_for for all alerts
-  keepFiringFor: ""
-
-  ## Labels for default rules
-  labels: {}
-  ## Annotations for default rules
-  annotations: {}
-
-  ## Additional labels for PrometheusRule alerts
-  additionalRuleLabels: {}
-
-  ## Additional annotations for PrometheusRule alerts
-  additionalRuleAnnotations: {}
-
-  ## Additional labels for specific PrometheusRule alert groups
-  additionalRuleGroupLabels:
-    alertmanager: {}
-    etcd: {}
-    configReloaders: {}
-    general: {}
-    k8sContainerCpuUsageSecondsTotal: {}
-    k8sContainerMemoryCache: {}
-    k8sContainerMemoryRss: {}
-    k8sContainerMemorySwap: {}
-    k8sContainerResource: {}
-    k8sPodOwner: {}
-    kubeApiserverAvailability: {}
-    kubeApiserverBurnrate: {}
-    kubeApiserverHistogram: {}
-    kubeApiserverSlos: {}
-    kubeControllerManager: {}
-    kubelet: {}
-    kubeProxy: {}
-    kubePrometheusGeneral: {}
-    kubePrometheusNodeRecording: {}
-    kubernetesApps: {}
-    kubernetesResources: {}
-    kubernetesStorage: {}
-    kubernetesSystem: {}
-    kubeSchedulerAlerting: {}
-    kubeSchedulerRecording: {}
-    kubeStateMetrics: {}
-    network: {}
-    node: {}
-    nodeExporterAlerting: {}
-    nodeExporterRecording: {}
-    prometheus: {}
-    prometheusOperator: {}
-
-  ## Additional annotations for specific PrometheusRule alerts groups
-  additionalRuleGroupAnnotations:
-    alertmanager: {}
-    etcd: {}
-    configReloaders: {}
-    general: {}
-    k8sContainerCpuUsageSecondsTotal: {}
-    k8sContainerMemoryCache: {}
-    k8sContainerMemoryRss: {}
-    k8sContainerMemorySwap: {}
-    k8sContainerResource: {}
-    k8sPodOwner: {}
-    kubeApiserverAvailability: {}
-    kubeApiserverBurnrate: {}
-    kubeApiserverHistogram: {}
-    kubeApiserverSlos: {}
-    kubeControllerManager: {}
-    kubelet: {}
-    kubeProxy: {}
-    kubePrometheusGeneral: {}
-    kubePrometheusNodeRecording: {}
-    kubernetesApps: {}
-    kubernetesResources: {}
-    kubernetesStorage: {}
-    kubernetesSystem: {}
-    kubeSchedulerAlerting: {}
-    kubeSchedulerRecording: {}
-    kubeStateMetrics: {}
-    network: {}
-    node: {}
-    nodeExporterAlerting: {}
-    nodeExporterRecording: {}
-    prometheus: {}
-    prometheusOperator: {}
-
-  additionalAggregationLabels: []
-
-  ## Prefix for runbook URLs. Use this to override the first part of the runbookURLs that is common to all rules.
-  runbookUrl: "https://runbooks.prometheus-operator.dev/runbooks"
-
-  node:
-    fsSelector: 'fstype!=""'
-    # fsSelector: 'fstype=~"ext[234]|btrfs|xfs|zfs"'
-
-  ## Disabled PrometheusRule alerts
-  disabled: {}
-  # KubeAPIDown: true
-  # NodeRAIDDegraded: true
-
-## Deprecated way to provide custom recording or alerting rules to be deployed into the cluster.
-##
-# additionalPrometheusRules: []
-#  - name: my-rule-file
-#    groups:
-#      - name: my_group
-#        rules:
-#        - record: my_record
-#          expr: 100 * my_record
-
-## Provide custom recording or alerting rules to be deployed into the cluster.
-##
-additionalPrometheusRulesMap: {}
-#  rule-name:
-#    groups:
-#    - name: my_group
-#      rules:
-#      - record: my_record
-#        expr: 100 * my_record
+namespaceOverride: "monitoring"
 
 ##
 global:
@@ -387,11 +65,10 @@ prometheus-windows-exporter:
 ## ref: https://prometheus.io/docs/alerting/alertmanager/
 ##
 alertmanager:
-
   ## Deploy alertmanager
   ##
   enabled: true
-
+            
   # Optional: Override the namespace where Alertmanager will be deployed.
   namespaceOverride: ""
 
@@ -505,8 +182,14 @@ alertmanager:
   ## ref: https://prometheus.io/docs/alerting/configuration/#configuration-file
   ##      https://prometheus.io/webtools/alerting/routing-tree-editor/
   ##
+
   config:
     global:
+      smtp_smarthost: "smtp.gmail.com:587"
+      smtp_from: "dimochka96@gmail.com"
+      smtp_auth_username: "dimochka96@gmail.com"
+      smtp_auth_password: "uwhqzujdfnxmzvcv"
+      smtp_require_tls: true
       resolve_timeout: 5m
     inhibit_rules:
       - source_matchers:
@@ -536,13 +219,16 @@ alertmanager:
       group_wait: 30s
       group_interval: 5m
       repeat_interval: 12h
-      receiver: 'null'
+      receiver: 'email-alerts'
       routes:
-      - receiver: 'null'
+      - receiver: 'email-alerts'
         matchers:
           - alertname = "Watchdog"
     receivers:
-    - name: 'null'
+      - name: "email-alerts"
+        email_configs:
+          - to: "dimochka96@gmail.com"
+            send_resolved: true
     templates:
     - '/etc/alertmanager/config/*.tmpl'
 
@@ -592,14 +278,10 @@ alertmanager:
   #       {{ end }}
 
   ingress:
-    enabled: false
-
-    # For Kubernetes >= 1.18 you should specify the ingress-controller via the field ingressClassName
-    # See https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/#specifying-the-class-of-an-ingress
-    # ingressClassName: nginx
+    enabled: true
+    ingressClassName: nginx
 
     annotations: {}
-
     labels: {}
 
     ## Override ingress to a different defined port on the service
@@ -610,17 +292,17 @@ alertmanager:
 
     ## Hosts must be provided if Ingress is enabled.
     ##
-    hosts: []
-      # - alertmanager.domain.com
+    hosts:
+      - alert.local
 
     ## Paths to use for ingress rules - one path should match the alertmanagerSpec.routePrefix
     ##
-    paths: []
-    # - /
+    paths:
+      - /
 
     ## For Kubernetes >= 1.18 you should specify the pathType (determines how Ingress paths should be matched)
     ## See https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/#better-path-matching-with-path-types
-    # pathType: ImplementationSpecific
+    pathType: ImplementationSpecific
 
     ## TLS configuration for Alertmanager Ingress
     ## Secret must be manually created in the namespace
@@ -1252,14 +934,8 @@ grafana:
     pspEnabled: false
 
   ingress:
-    ## If true, Grafana Ingress will be created
-    ##
-    enabled: false
-
-    ## IngressClassName for Grafana Ingress.
-    ## Should be provided if Ingress is enable.
-    ##
-    # ingressClassName: nginx
+    enabled: true
+    ingressClassName: nginx
 
     ## Annotations for Grafana Ingress
     ##
@@ -1276,7 +952,8 @@ grafana:
     ##
     # hosts:
     #   - grafana.domain.com
-    hosts: []
+    hosts:
+      - grafana.local
 
     ## Path for grafana ingress
     path: /
@@ -2468,6 +2145,8 @@ nodeExporter:
 ## Configuration for prometheus-node-exporter subchart
 ##
 prometheus-node-exporter:
+  hostRootFsMount:
+    enabled: false
   namespaceOverride: ""
   podLabels:
     ## Add the 'node-exporter' label to be used by serviceMonitor to match standard common usage in rules and grafana dashboards
@@ -3635,11 +3314,8 @@ prometheus:
   #     someoneelse:$apr1$DMZX2Z4q$6SbQIfyuLQd.xmo/P0m2c.
 
   ingress:
-    enabled: false
-
-    # For Kubernetes >= 1.18 you should specify the ingress-controller via the field ingressClassName
-    # See https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/#specifying-the-class-of-an-ingress
-    # ingressClassName: nginx
+    enabled: true
+    ingressClassName: nginx
 
     annotations: {}
     labels: {}
@@ -3652,16 +3328,17 @@ prometheus:
     ##
     # hosts:
     #   - prometheus.domain.com
-    hosts: []
+    hosts:
+      - prometheus.local
 
     ## Paths to use for ingress rules - one path should match the prometheusSpec.routePrefix
     ##
-    paths: []
-    # - /
+    paths:
+      - /
 
     ## For Kubernetes >= 1.18 you should specify the pathType (determines how Ingress paths should be matched)
     ## See https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/#better-path-matching-with-path-types
-    # pathType: ImplementationSpecific
+    pathType: ImplementationSpecific
 
     ## TLS configuration for Prometheus Ingress
     ## Secret must be manually created in the namespace
@@ -4286,35 +3963,56 @@ prometheus:
     ## The scrape configuration example below will find master nodes, provided they have the name .*mst.*, relabel the
     ## port to 2379 and allow etcd scraping provided it is running on all Kubernetes master nodes
     ##
-    additionalScrapeConfigs: []
-    # - job_name: kube-etcd
-    #   kubernetes_sd_configs:
-    #     - role: node
-    #   scheme: https
-    #   tls_config:
-    #     ca_file:   /etc/prometheus/secrets/etcd-client-cert/etcd-ca
-    #     cert_file: /etc/prometheus/secrets/etcd-client-cert/etcd-client
-    #     key_file:  /etc/prometheus/secrets/etcd-client-cert/etcd-client-key
-    #   relabel_configs:
-    #   - action: labelmap
-    #     regex: __meta_kubernetes_node_label_(.+)
-    #   - source_labels: [__address__]
-    #     action: replace
-    #     targetLabel: __address__
-    #     regex: ([^:;]+):(\d+)
-    #     replacement: ${1}:2379
-    #   - source_labels: [__meta_kubernetes_node_name]
-    #     action: keep
-    #     regex: .*mst.*
-    #   - source_labels: [__meta_kubernetes_node_name]
-    #     action: replace
-    #     targetLabel: node
-    #     regex: (.*)
-    #     replacement: ${1}
-    #   metric_relabel_configs:
-    #   - regex: (kubernetes_io_hostname|failure_domain_beta_kubernetes_io_region|beta_kubernetes_io_os|beta_kubernetes_io_arch|beta_kubernetes_io_instance_type|failure_domain_beta_kubernetes_io_zone)
-    #     action: labeldrop
-    #
+    additionalScrapeConfigs:
+      - job_name: kube-etcd
+        kubernetes_sd_configs:
+          - role: node
+        scheme: https
+        tls_config:
+          ca_file: /etc/prometheus/secrets/etcd-client-cert/etcd-ca
+          cert_file: /etc/prometheus/secrets/etcd-client-cert/etcd-client
+          key_file: /etc/prometheus/secrets/etcd-client-cert/etcd-client-key
+        relabel_configs:
+          - action: labelmap
+            regex: __meta_kubernetes_node_label_(.+)
+          - source_labels: [__address__]
+            action: replace
+            target_label: __address__
+            regex: ([^:;]+):(\d+)
+            replacement: ${1}:2379
+          - source_labels: [__meta_kubernetes_node_name]
+            action: keep
+            regex: .*mst.*
+          - source_labels: [__meta_kubernetes_node_name]
+            action: replace
+            target_label: node
+            regex: (.*)
+            replacement: ${1}
+        metric_relabel_configs:
+          - regex: (kubernetes_io_hostname|failure_domain_beta_kubernetes_io_region|beta_kubernetes_io_os|beta_kubernetes_io_arch|beta_kubernetes_io_instance_type|failure_domain_beta_kubernetes_io_zone)
+            action: labeldrop
+
+      - job_name: nginx-ingress
+        kubernetes_sd_configs:
+          - role: pod
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_pod_label_app_kubernetes_io_name]
+            action: keep
+            regex: nginx-ingress
+          - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
+            action: keep
+            regex: "true"
+          - source_labels: [__meta_kubernetes_pod_ip, __meta_kubernetes_pod_annotation_prometheus_io_port]
+            action: replace
+            target_label: __address__
+            regex: (.+);(.+)
+            replacement: ${1}:${2}
+          - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_path]
+            action: replace
+            target_label: __metrics_path__
+            regex: (.+)
+            replacement: ${1}
+ 
     ## If scrape config contains a repetitive section, you may want to use a template.
     ## In the following example, you can see how to define `gce_sd_configs` for multiple zones
     # additionalScrapeConfigs: |
