@@ -3996,30 +3996,35 @@ prometheus:
         kubernetes_sd_configs:
           - role: endpoints
         relabel_configs:
+          # Keep only services with the prometheus.io/scrape=true annotation
           - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_scrape]
             action: keep
             regex: true
+          # Ensure the namespace is ingress-nginx
           - source_labels: [__meta_kubernetes_namespace]
             action: keep
             regex: ingress-nginx
+          # Ensure the service name matches ingress-nginx-app-controller-metrics
           - source_labels: [__meta_kubernetes_service_name]
             action: keep
             regex: ingress-nginx-app-controller-metrics
+          # Use the prometheus.io/path annotation for the scrape path
           - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_path]
             action: replace
             target_label: __metrics_path__
-          - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_port]
+          # Combine the pod IP and prometheus.io/port annotation for the scrape address
+          - source_labels: [__meta_kubernetes_pod_ip, __meta_kubernetes_service_annotation_prometheus_io_port]
             action: replace
             target_label: __address__
-            regex: (.+)
-            replacement: ${1}
+            regex: (.+);(.+)
+            replacement: ${1}:${2}
+          # Add namespace and service labels for better organization
           - source_labels: [__meta_kubernetes_namespace]
             action: replace
             target_label: namespace
           - source_labels: [__meta_kubernetes_service_name]
             action: replace
-            target_label: service
-                  
+            target_label: service                  
     ## If scrape config contains a repetitive section, you may want to use a template.
     ## In the following example, you can see how to define `gce_sd_configs` for multiple zones
     # additionalScrapeConfigs: |
