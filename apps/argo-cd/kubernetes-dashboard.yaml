@@ -1,0 +1,27 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name:  dashboard
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kubernetes-dashboard-app
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: 'https://github.com/ImDimchkee/k8s-prom-argo-ingress.git'
+    targetRevision: HEAD
+    path: charts/kubernetes-dashboard
+    helm:
+      valueFiles:
+        - ../../values/kubernetes-dashboard/values.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: ingress-nginx
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
