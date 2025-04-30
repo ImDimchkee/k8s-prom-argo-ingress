@@ -2058,7 +2058,7 @@ kube-state-metrics:
   ## Enable scraping via kubernetes-service-endpoints
   ## Disabled by default as we service monitor is enabled below
   ##
-  prometheusScrape: false
+  prometheusScrape: true
 
   prometheus:
     monitor:
@@ -2066,7 +2066,7 @@ kube-state-metrics:
       ## Enable scraping via service monitor
       ## Disable to prevent duplication if you enable prometheusScrape above
       ##
-      enabled: true
+      enabled: false
 
       ## Scrape interval. If not set, the Prometheus default scrape interval is used.
       ##
