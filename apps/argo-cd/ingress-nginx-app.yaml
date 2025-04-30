@@ -17,12 +17,10 @@ spec:
     helm:
       valueFiles:
         - ../../values/ingress-nginx/values.yaml
-    # files:
-    #   - apps/ingress-nginx-servicemonitor.yaml
   destination:
     server: https://kubernetes.default.svc
     namespace: ingress-nginx
-  # syncPolicy:
-  #   automated:
-  #     prune: true
-  #     selfHeal: true
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
