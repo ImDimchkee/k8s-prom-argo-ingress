@@ -7,8 +7,7 @@
 #
 eck-elasticsearch:
   enabled: true
-  # This is adjusting the full name of the elasticsearch resource so that both the eck-elasticsearch
-  # and the eck-kibana chart work together by default in the eck-stack chart.
+
   fullnameOverride: eck-elasticsearch
 
   ingress:
@@ -25,8 +24,8 @@ eck-elasticsearch:
 #
 eck-kibana:
   enabled: true
-  # This is also adjusting the kibana reference to the elasticsearch resource named previously so that
-  # both the eck-elasticsearch and the eck-kibana chart work together by default in the eck-stack chart.
+
+  fullnameOverride: eck-kibana
   elasticsearchRef:
     name: eck-elasticsearch
 
@@ -54,7 +53,7 @@ eck-agent:
   kibanaRef:
     name: eck-kibana
     namespace: elk-stack
-    
+
   config:
     inputs:
       # Collect logs from Kubernetes system components
