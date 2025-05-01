@@ -50,9 +50,6 @@ eck-agent:
   elasticsearchRef:
     name: eck-elasticsearch
     namespace: elk-stack
-  kibanaRef:
-    name: eck-kibana
-    namespace: elk-stack
 
   config:
     inputs:
