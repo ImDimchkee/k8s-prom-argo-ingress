@@ -12,6 +12,10 @@ eck-elasticsearch:
 
   ingress:
     enabled: true
+    
+    annotations:
+      kubernetes.io/ingress.class: nginx
+
     pathType: Prefix
     hosts:
       - host: elasticsearch.local
@@ -25,15 +29,15 @@ eck-elasticsearch:
 eck-kibana:
   enabled: true
 
-  config:
-    server:
-
   elasticsearchRef:
     name: eck-elasticsearch
 
   ingress:
     enabled: true
-    ingressClassName: nginx
+    
+    annotations:
+      kubernetes.io/ingress.class: nginx
+
     pathType: Prefix
     hosts:
       - host: kibana.local
@@ -47,6 +51,10 @@ eck-kibana:
 eck-agent:
   enabled: true
 
+  elasticsearchRef:
+    name: eck-elasticsearch
+    namespace: elk-stack
+
   deployment:
     podTemplate:
       spec:
@@ -55,9 +63,6 @@ eck-agent:
           securityContext:
             runAsUser: 0
 
-  elasticsearchRef:
-    name: eck-elasticsearch
-    namespace: elk-stack
 
   config:
     inputs:
