@@ -48,6 +48,12 @@ eck-agent:
   deployment:
     enabled: true
     replicas: 1
+  elasticsearchRef:
+    name: eck-elasticsearch
+    namespace: elk-stack
+  kibanaRef:
+    name: eck-kibana
+    namespace: elk-stack
   config:
     inputs:
       # Collect logs from Kubernetes system components
