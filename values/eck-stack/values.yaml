@@ -48,6 +48,50 @@ eck-agent:
   deployment:
     enabled: true
     replicas: 1
+  config:
+    inputs:
+      # Collect logs from Kubernetes system components
+      - name: kubernetes-logs
+        type: log
+        enabled: true
+        paths:
+          - /var/log/containers/*.log
+        processors:
+          - add_kubernetes_metadata:
+              in_cluster: true
+
+      # Collect logs from Prometheus
+      - name: prometheus-logs
+        type: log
+        enabled: true
+        paths:
+          - /var/log/prometheus/*.log
+
+      # Collect logs from Ingress-NGINX
+      - name: ingress-nginx-logs
+        type: log
+        enabled: true
+        paths:
+          - /var/log/containers/*ingress-nginx*.log
+
+      # Collect logs from Kubernetes Dashboard
+      - name: kubernetes-dashboard-logs
+        type: log
+        enabled: true
+        paths:
+          - /var/log/containers/*kubernetes-dashboard*.log
+
+      # Collect metrics from Prometheus
+      - name: prometheus-metrics
+        type: prometheus/metrics
+        enabled: true
+        hosts:
+          - http://prometheus.monitoring.svc.cluster.local:9090/metrics
+
+      # Collect metrics from Kubernetes API server
+      - name: kubernetes-metrics
+        type: kubernetes/metrics
+        enabled: true
     
 # If enabled, will use the eck-fleet-server chart and deploy a Fleet Server resource.
 #
