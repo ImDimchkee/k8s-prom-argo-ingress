@@ -25,7 +25,6 @@ eck-elasticsearch:
 eck-kibana:
   enabled: true
 
-  fullnameOverride: eck-kibana
   elasticsearchRef:
     name: eck-elasticsearch
 
