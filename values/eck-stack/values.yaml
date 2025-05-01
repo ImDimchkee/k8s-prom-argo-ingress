@@ -1,3 +1,4 @@
+
 ---
 # Default values for eck-stack.
 # This is a YAML-formatted file.
@@ -29,15 +30,15 @@ eck-kibana:
   elasticsearchRef:
     name: elasticsearch
 
-    ingress:
-      enabled: true
-      pathType: Prefix
-      hosts:
-        - host: kibana.local
-          paths:
-            - /
-      tls:
-        enabled: false
+  ingress:
+    enabled: true
+    pathType: Prefix
+    hosts:
+      - host: kibana.local
+        paths:
+          - /
+    tls:
+      enabled: false
 
 # If enabled, will use the eck-agent chart and deploy an Elastic Agent instance.
 #
