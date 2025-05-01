@@ -33,7 +33,7 @@ eck-kibana:
 
   ingress:
     enabled: true
-    className: nginx
+    ingressClassName: nginx
     pathType: Prefix
     hosts:
       - host: kibana.local
