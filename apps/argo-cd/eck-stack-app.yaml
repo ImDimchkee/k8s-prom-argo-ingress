@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name:  eck-stack
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: eck-stack-app
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: 'https://github.com/ImDimchkee/k8s-prom-argo-ingress.git'
+    targetRevision: HEAD
+    path: charts/eck-stack
+    helm:
+      valueFiles:
+        - ../../values/eck-stack/values.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: eck-stack
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
