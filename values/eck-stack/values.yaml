@@ -25,11 +25,15 @@ eck-elasticsearch:
 eck-kibana:
   enabled: true
 
+  config:
+    server:
+
   elasticsearchRef:
     name: eck-elasticsearch
 
   ingress:
     enabled: true
+    className: nginx
     pathType: Prefix
     hosts:
       - host: kibana.local
