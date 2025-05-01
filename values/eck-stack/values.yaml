@@ -10,6 +10,16 @@ eck-elasticsearch:
   # and the eck-kibana chart work together by default in the eck-stack chart.
   fullnameOverride: elasticsearch
 
+  ingress:
+    enabled: true
+    pathType: Prefix
+    hosts:
+      - host: elasticsearch.local
+        paths:
+          - /
+    tls:
+      enabled: false
+
 # If enabled, will use the eck-kibana chart and deploy a Kibana resource.
 #
 eck-kibana:
@@ -18,6 +28,16 @@ eck-kibana:
   # both the eck-elasticsearch and the eck-kibana chart work together by default in the eck-stack chart.
   elasticsearchRef:
     name: elasticsearch
+
+    ingress:
+      enabled: true
+      pathType: Prefix
+      hosts:
+        - host: kibana.local
+          paths:
+            - /
+      tls:
+        enabled: false
 
 # If enabled, will use the eck-agent chart and deploy an Elastic Agent instance.
 #
@@ -32,7 +52,7 @@ eck-fleet-server:
 # If enabled, will use the eck-beats chart and deploy a Beats resource.
 #
 eck-beats:
-  enabled: true
+  enabled: false
 
 # If enabled, will use the eck-logstash chart and deploy a Logstash resource.
 #
@@ -42,7 +62,7 @@ eck-logstash:
 # If enabled, will use the eck-apm-server chart and deploy a standalone APM Server resource.
 #
 eck-apm-server:
-  enabled: true
+  enabled: false
 
 # If enabled, will use the eck-enterprise-search chart and deploy a Enterprise Search resource.
 #
